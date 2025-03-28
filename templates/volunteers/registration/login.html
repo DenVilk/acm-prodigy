@@ -1,0 +1,33 @@
+{% extends 'volunteers/wrapper.html' %}
+{% load static %}
+
+{% block title %}
+    {{tr.authorization}}
+{% endblock %}
+
+{% block content %}
+<form method="post" class="mt-5">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label for="login" class="form-label">Username</label>
+        <input type="text" class="form-control" id="login" name="username">
+    </div>
+    <div class="mb-3">
+        <label for="exampleInputPassword1" class="form-label">Password</label>
+        <input type="password" class="form-control" id="exampleInputPassword1" name="password">
+    </div>
+    <p class="wrong-inf">
+        {% for field, errors in form.errors.items %} {% for error in errors %}
+        {{error}}
+        <br />
+        <br />
+        {% endfor %} {% endfor %}
+    </p>
+    <input name="next" type="hidden" value="{% url 'volunteers-index' %}">
+    <span class="no-account">
+        {{tr.no_account}}?
+        <a href="{% url 'volunteers-signup' %}" class="signUp-link">{{tr.signup}}!</a>
+    </span>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+{% endblock %}

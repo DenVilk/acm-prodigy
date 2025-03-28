@@ -241,7 +241,7 @@ class CreateTeamView(LanguageMixin, LoginRequiredMixin, CreateView):
     def get(self, request, *args, **kwargs):
         if not get_available_reg() or \
             get_olympiad_type() =='single' or \
-            request.user.participant.team:
+            Participant.objects.filter(user=request.user, team__isnull=False).exists():
 
             return redirect('team-detail')
 
@@ -256,8 +256,9 @@ class CreateTeamView(LanguageMixin, LoginRequiredMixin, CreateView):
         )
 
     def post(self, request, *args, **kwargs):
+        Participant.objects.create(user=request.user)
         if not get_available_reg() or \
-            request.user.participant.team:
+            Participant.objects.filter(user=request.user, team__isnull=False).exists():
 
             return redirect('team-detail')
 

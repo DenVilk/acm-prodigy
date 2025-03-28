@@ -1,0 +1,44 @@
+{% extends 'volunteers/wrapper.html' %}
+{% load static %}
+
+{% block title %}
+{{tr.registration}}
+{% endblock %}
+
+{% block content %}
+<form method="post" class="mt-5">
+  {% csrf_token %}
+  <div class="mb-3">
+    <label for="username" class="form-label">Username</label>
+    <input type="text" id="username" name="username" class="form-control">
+  </div>
+  <div class="mb-3">
+    <label for="password1" class="form-label">Password</label>
+    <input type="password" class="form-control" id="password1" name="password1">
+  </div>
+  <div class="mb-3">
+    <label for="password2" class="form-label">Repeat password</label>
+    <input type="password" class="form-control" id="password2" name="password2">
+  </div>
+  {{form.captcha}}
+  <p class="wrong-inf">
+      {% for field, errors in form.errors.items %}
+      {% for error in errors %}
+          {{error}}
+          <br />
+          <br />
+      {% endfor %}
+      {% endfor %}
+  </p>
+  {% if agreement %}
+      <div class="mb-3 form-check">
+          <input type="checkbox" class="form-check-input" id="agreement" name="personal_data_agreement">
+          <label class="form-check-personal_data_agreement" for="exampleCheck1">
+              {{tr.policy_agree}} <a class="policy" target="_blank" href="{{ agreement_url }}">{{tr.policy}}
+          </label>
+      </div>
+  {% endif %}
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+{% endblock content %}

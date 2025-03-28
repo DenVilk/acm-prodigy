@@ -198,7 +198,8 @@ class Participant(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         null=True,
-        blank=True
+        blank=True,
+        related_name='participant',
     )
     firstname = models.CharField(max_length=50)
     secondname = models.CharField(max_length=50)
@@ -245,10 +246,3 @@ class Participant(models.Model):
     @property
     def fullname(self):
         return f'{self.lastname} {self.firstname} {self.secondname}'
-
-
-@receiver(post_save, sender=User)
-def update_user_profile(sender, instance, created, **kwargs):
-    if created:
-        Participant.objects.create(user=instance)
-    instance.participant.save()

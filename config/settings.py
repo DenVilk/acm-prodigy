@@ -41,7 +41,7 @@ if DEBUG:
 # Allowed hosts configuration
 
 allowed_hosts = os.getenv("ALLOWED_HOSTS",'localhost').split(',')
-cors_origins = os.getenv("CORS_ORIGINS",'localhost').split(',')
+cors_origins = os.getenv("CORS_ORIGINS",'http://localhost:8000').split(',')
 
 ALLOWED_HOSTS = allowed_hosts
 CSRF_TRUSTED_ORIGINS = cors_origins
@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'main',
+    'volunteers',
     'django_recaptcha',
     'django_countries',
 ]
