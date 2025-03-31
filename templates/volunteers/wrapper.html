@@ -1,0 +1,24 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}{% endblock %} | ACM Volunteers</title>
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'volunteers/css/main.css' %}">
+  </head>
+  <body>
+    <main>
+      {% include 'volunteers/includes/header.html' %}
+      <div class="container">
+        <div class="row">
+          {% block content %}
+          {% endblock %}
+        </div>
+      </div>
+    </main>
+    {% include 'volunteers/includes/footer.html' %}
+    <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  </body>
+</html>

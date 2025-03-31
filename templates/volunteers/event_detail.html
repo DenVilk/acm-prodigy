@@ -1,0 +1,26 @@
+{% extends "volunteers/wrapper.html" %}
+
+{% block title %}
+{{event.name}}
+{% endblock %}
+
+{% block content %}
+<h1>{{event.name}}</h1>
+
+<div>
+    {% for location, volunteers in location_volunteers.items %}
+    <h3>{{location}}</h3>
+    <ul>
+        {% for volunteer in volunteers %}
+        <li>
+            {{volunteer.volunteer}}
+            {% if volunteer.is_responsible %}
+            (ответственный)
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+    {% endfor %}
+</div>
+
+{% endblock %}

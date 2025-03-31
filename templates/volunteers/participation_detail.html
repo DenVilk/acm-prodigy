@@ -1,0 +1,39 @@
+{% extends "volunteers/wrapper.html" %}
+
+{% block title %}
+{{event.name}}
+{% endblock %}
+
+{% block content %}
+<h1>
+    {{event.name}}
+</h1>
+{% if participation %}
+    {% if participation.status == 'approved' or request.user.is_superuser %}
+    <a class="btn btn-secondary" href="{% url 'event-detail' event.id %}">Volunteers</a>
+    {% endif %}
+    <ul>
+        <li>Статус заявки: {{participation.status}}</li>
+        {% if participation.status == 'approved' %}
+        <li>Должность:
+            {% if participation.position %}
+            {{participation.position.name}}
+            {% else %}
+            Не назначено
+            {% endif %}
+        </li>
+        <li>Локация: {{ participation.location.name }}</li>
+        {% endif %}
+    </ul>
+{% else %}
+    {% if event.is_open %}
+        <form method="post">
+            {% csrf_token %}
+            {{form}}
+            <button type="submit">Save</button>
+        </form>
+    {% else %}
+        Registration closed
+    {% endif %}
+{% endif %}
+{% endblock %}

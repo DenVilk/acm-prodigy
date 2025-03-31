@@ -1,0 +1,21 @@
+{% extends "volunteers/wrapper.html" %}
+
+{% block title %}
+Index
+{% endblock %}
+
+{% block content %}
+{% if not request.user.volunteer %}
+    <p>Create volunteer account by pressing button</p>
+    <form action="{% url 'create-volunteer' %}" method="post">
+        {% csrf_token %}
+        <button>Create</button>
+    </form>
+{% else %}
+    <form method="post">
+        {% csrf_token %}
+        {{form}}
+        <button type="submit">Save</button>
+    </form>
+{% endif %}
+{% endblock %}

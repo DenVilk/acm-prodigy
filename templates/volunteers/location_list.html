@@ -1,0 +1,14 @@
+{% extends "volunteers/wrapper.html" %}
+
+{% block title %}
+Locations
+{% endblock %}
+
+{% block content %}
+<h1>Локации:</h1>
+<ul>
+    {% for location in locations %}
+    <li>{{location.name}}</li>
+    {% endfor %}
+</ul>
+{% endblock %}
