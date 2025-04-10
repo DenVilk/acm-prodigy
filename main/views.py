@@ -1,3 +1,4 @@
+from django.http import FileResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.views import View
 from django.views.generic import CreateView, TemplateView
@@ -15,7 +16,7 @@ from main.models import Coach, Participant, Team
 from main.services import get_available_reg, get_credentials_show, get_olympiad_type
 from main.mixins import LanguageMixin
 from main.utils import Configuration
-
+from main.generate import generate_diploma
 
 class IndexView(LanguageMixin, TemplateView):
     template_name = 'main/index.html'
@@ -184,6 +185,23 @@ class TeamView(LanguageMixin, LoginRequiredMixin, View):
             context
         )
 
+class Diploma(LanguageMixin, TemplateView):
+    def get(self, request, *args, **kwargs):
+        participant = request.user.participant
+        team = participant.team
+        team_name = team.name
+        participants = team.participants.all()
+        coach = team.coach.fullname
+        generate_diploma(participants, team_name, coach)
+        pdf_path = f"diploma{team_name}.pdf"
+        response = FileResponse(
+            open(pdf_path, 'rb'),
+            content_type='application/pdf'
+        )
+        #response['Content-Disposition'] = f'attachment; filename="{pdf_path}"'
+        import os
+        os.unlink(pdf_path)
+        return response
 
 class CreateCoachView(LanguageMixin, LoginRequiredMixin, CreateView):
     model = Coach
