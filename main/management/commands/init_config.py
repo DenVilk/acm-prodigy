@@ -20,7 +20,7 @@ class Command(BaseCommand):
         if _:
             obj.value='false'
             obj.save()
-
+            
         obj, _ = Settings.objects.get_or_create(name="configuration.registration.student_group")
         if _:
             obj.value='false'
@@ -59,4 +59,9 @@ class Command(BaseCommand):
         obj, _ = Settings.objects.get_or_create(name="configuration.agreement.url")
         if _:
             obj.value=''
+            obj.save()
+
+        obj, _ = Settings.objects.get_or_create(name="diploma.image.url")
+        if _:
+            obj.value = ''
             obj.save()

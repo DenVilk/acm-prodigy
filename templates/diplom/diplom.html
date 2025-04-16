@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Diplom</title>
+</head>
+<body>
+  <div class="container">
+    <!-- <header class="header">
+      <h1 class="header__promo">
+        <span>BSUIR OPEN XIII</span><br>
+        ДИПЛОМ III СТЕПЕНИ
+      </h1>
+    </header> -->
+
+    <section class="winners">
+      <span>Награждается команда</span>
+      <h3>{{ team }}</h3>
+    </section>
+
+    <section class="team">
+      <div class="participant">
+        <span>В составе</span>
+        <ul>
+          {% for participant in participants %}
+          <li>{{ participant.firstname }} {{ participant.lastname }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="trainer">
+        <p>тренер</p>
+        <span>{{ coach }}</span>
+      </div>
+    </section>
+
+    <!-- <footer class="management">
+      <span>Ректор БГУИР</span>
+      <span>В.А.Богуш</span>
+      <span>Минск, 2025</span>
+    </footer> -->
+  </div>
+</body>
+</html>

@@ -22,6 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # Quick-start development settings - unsuitable for production
+# Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
@@ -38,10 +39,11 @@ if DEBUG:
     RECAPTCHA_PUBLIC_KEY = os.getenv("DBG_RECAPTCHA_PUBLIC_KEY")
     RECAPTCHA_SECRET_KEY = os.getenv("DBG_RECAPTCHA_SECRET_KEY")
 
+
 # Allowed hosts configuration
 
 allowed_hosts = os.getenv("ALLOWED_HOSTS",'localhost').split(',')
-cors_origins = os.getenv("CORS_ORIGINS",'localhost').split(',')
+cors_origins = os.getenv("CORS_ORIGINS",'http://localhost').split(',')
 
 ALLOWED_HOSTS = allowed_hosts
 CSRF_TRUSTED_ORIGINS = cors_origins
@@ -208,6 +210,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles/')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
+
+#Diploma template path
+TEMPLATE_PATH = "diplom/diplom.html"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
