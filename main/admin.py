@@ -3,6 +3,13 @@ from uuid import uuid4
 from django.contrib import admin
 from django.conf import settings
 from django.http import HttpResponse
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.utils import timezone
+import gspread
+import logging
+from datetime import datetime
+import os
 
 from main.utils import Configuration
 from main.models import (
@@ -14,16 +21,16 @@ from main.models import (
     Settings,
 )
 
-admin.site.site_header = f'ACM (ver. {settings.VERSION})'
+logger = logging.getLogger(__name__)
 
+JSON_KEY_PATH = 'path-to-your-key.json'
+SPREADSHEET_URL = 'link-to-your-table'
+
+admin.site.site_header = f'ACM (ver. {settings.VERSION})'
 
 @admin.register(Settings)
 class SettingsAdmin(admin.ModelAdmin):
-    list_display = (
-        'name',
-        'value',
-    )
-
+    list_display = ('name', 'value')
 
 class TranslationInline(admin.TabularInline):
     model = Translation
@@ -31,13 +38,11 @@ class TranslationInline(admin.TabularInline):
     min_num = 1
     max_num = len(Translation.LANGUAGES)
 
-
 @admin.register(TranslationKey)
 class TranslationKeyAdmin(admin.ModelAdmin):
     list_display = ('key',)
     search_fields = ('key',)
     inlines = [TranslationInline]
-
 
 @admin.register(Participant)
 class ParticipantAdmin(admin.ModelAdmin):
@@ -53,24 +58,16 @@ class ParticipantAdmin(admin.ModelAdmin):
     search_fields = ['firstname', 'secondname', 'lastname', 'email', 'user__username']
     empty_value_display = 'unknown'
 
-
 class ParticipantInline(admin.TabularInline):
     extra = 0
     model = Participant
     exclude = ['user']
 
-
 @admin.register(Team)
 class TeamAdmin(admin.ModelAdmin):
     inlines = [ParticipantInline]
-    list_display = (
-        '__str__',
-        'status',
-        'type',
-        'system_login'
-    )
-    search_fields = ['name', 'participants__lastname',
-                     'coach__lastname', 'system_login']
+    list_display = ('__str__', 'status', 'type', 'system_login')
+    search_fields = ['name', 'participants__lastname', 'coach__lastname', 'system_login']
     list_filter = (
         'status',
         'type',
@@ -282,7 +279,73 @@ class TeamAdmin(admin.ModelAdmin):
 
 # admin.site.register(Coach)
 
+@receiver(post_save, sender=Participant)
+def export_to_google_sheet(sender, instance, created, **kwargs):
+    if not created or instance.is_exported:
+        return
+
+    try:
+        gc = gspread.service_account(filename=JSON_KEY_PATH)
+        sh = gc.open_by_url(SPREADSHEET_URL)
+        worksheet = sh.sheet1
+
+        existing_ids = [
+            int(row[0]) for row in worksheet.get_all_values()[1:]
+            if row and row[0].isdigit()
+        ]
+
+        row = [
+            instance.id,
+            instance.lastname,
+            instance.firstname,
+            instance.secondname,
+            instance.get_tshirt_size_display(),
+            instance.email,
+            instance.phone,
+            instance.education,
+            instance.get_student_status_display(),
+            f"{instance.country.name} ({instance.country.code})",
+            instance.team.name if instance.team else "-",
+            datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        ]
+
+        if not worksheet.get_all_values():
+            worksheet.append_row([
+                "ID", "Фамилия", "Имя", "Отчество", "Размер футболки",
+                "Email", "Телефон", "Учебное заведение", "Статус",
+                "Страна", "Команда", "Дата регистрации"
+            ])
+
+
+        if instance.id in existing_ids:
+            row_index = existing_ids.index(instance.id) + 2
+            worksheet.update(f'A{row_index}:L{row_index}', [row])
+        else:
+            worksheet.append_row(row)
+
+        instance.is_exported = True
+        instance.exported_at = timezone.now()
+        instance.save()
+
+    except Exception as e:
+        logger.error(f"Export error: {e}")
+
 
 @admin.register(Coach)
 class CoachAdmin(admin.ModelAdmin):
-    search_fields = ['firstname', 'secondname', 'lastname', 'email',]
+    search_fields = ['firstname', 'secondname', 'lastname', 'email']
+
+
+"""
+class Participant(models.Model):
+    # ... Нужно добавить только поля ниже в models.py...
+
+    is_exported = models.BooleanField(
+        default=False
+    )
+    exported_at = models.DateTimeField(
+        null=True,
+        blank=True,
+    )
+
+"""
