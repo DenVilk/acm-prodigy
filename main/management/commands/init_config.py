@@ -41,14 +41,19 @@ class Command(BaseCommand):
             obj.value='admin'
             obj.save()
 
-        obj, _ = Settings.objects.get_or_create(name="configuration.solve.login")
-        if _:
-            obj.value='qwerty123'
-            obj.save()
-
         obj, _ = Settings.objects.get_or_create(name="configuration.solve.url")
         if _:
             obj.value='http://localhost:4242/api/v0'
+            obj.save()
+
+        obj, _ = Settings.objects.get_or_create(name="configuration.solve.root_url")
+        if _:
+            obj.value='http://localhost:4242/'
+            obj.save()
+
+        obj, _ = Settings.objects.get_or_create(name="configuration.solve.balloons.contest_id")
+        if _:
+            obj.value='1'
             obj.save()
 
         obj, _ = Settings.objects.get_or_create(name="configuration.agreement")

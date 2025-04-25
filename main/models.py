@@ -27,6 +27,7 @@ class TranslationKey(models.Model):
     def __str__(self):
         return self.key
 
+
 class AcceptedSolution(models.Model):
     user_id = models.IntegerField()
     problem_id = models.IntegerField()
@@ -36,7 +37,7 @@ class AcceptedSolution(models.Model):
 
     def __str__(self):
         return f"{self.user_title} - {self.problem_title}"
-    
+
     @classmethod
     def save_solution(cls, user_id, problem_id, problem_title, user_title):
         """Сохраняем решение в базу данных и логируем результат."""
@@ -53,6 +54,7 @@ class AcceptedSolution(models.Model):
         else:
             logging.info(f"Решение уже существует: {user_title} - {problem_title}")
             return None  # Возвращаем None, если решение уже существует
+
 
 class Translation(models.Model):
     LANGUAGES = (
@@ -99,7 +101,6 @@ class Coach(models.Model):
     @property
     def fullname(self):
         return f'{self.lastname} {self.firstname} {self.secondname}'
-
 
 
 class Team(models.Model):

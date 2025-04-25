@@ -6,6 +6,7 @@ from django.http import HttpResponse
 
 from main.utils import Configuration
 from main.models import (
+    AcceptedSolution,
     Participant,
     Team,
     Coach,
@@ -16,6 +17,15 @@ from main.models import (
 
 admin.site.site_header = f'ACM (ver. {settings.VERSION})'
 
+
+@admin.register(AcceptedSolution)
+class SolutionAdmin(admin.ModelAdmin):
+    list_display = (
+        'user_id',
+        'problem_id',
+        'problem_title',
+        'user_title',
+    )
 
 @admin.register(Settings)
 class SettingsAdmin(admin.ModelAdmin):

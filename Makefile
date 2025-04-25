@@ -42,6 +42,11 @@ migrations:
 		python3 manage.py migrate; \
 	fi
 
+init_config:
+	@if [ "$(ENV)" = "local" ]; then \
+		python3 manage.py init_config;\
+	fi
+
 createsuperuser:
 	@if [ "$(ENV)" = "local" ]; then \
 		python3 manage.py createsuperuser;\
@@ -50,4 +55,9 @@ createsuperuser:
 translations:
 	@if [ "$(ENV)" = "local" ]; then \
 		python3 manage.py load_translations translations.json --force;\
+	fi
+
+balloons:
+	@if [ "$(ENV)" = "local" ]; then \
+		python3 manage.py balloons;\
 	fi
