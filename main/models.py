@@ -4,6 +4,9 @@ from django.dispatch import receiver
 from django.db.models.signals import post_save
 from django_countries.fields import CountryField
 from django.conf import settings
+import logging
+
+logging.basicConfig(level=logging.INFO)
 
 
 User = get_user_model()
@@ -24,6 +27,32 @@ class TranslationKey(models.Model):
     def __str__(self):
         return self.key
 
+class AcceptedSolution(models.Model):
+    user_id = models.IntegerField()
+    problem_id = models.IntegerField()
+    problem_title = models.CharField(max_length=255)
+    user_title = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user_title} - {self.problem_title}"
+    
+    @classmethod
+    def save_solution(cls, user_id, problem_id, problem_title, user_title):
+        """Сохраняем решение в базу данных и логируем результат."""
+        solution, created = cls.objects.get_or_create(
+            user_id=user_id,
+            problem_id=problem_id,
+            problem_title=problem_title,
+            user_title=user_title,
+        )
+
+        if created:
+            logging.info(f"Новое Accepted решение сохранено: {user_title} - {problem_title}")
+            return solution  # Возвращаем сохраненное решение
+        else:
+            logging.info(f"Решение уже существует: {user_title} - {problem_title}")
+            return None  # Возвращаем None, если решение уже существует
 
 class Translation(models.Model):
     LANGUAGES = (

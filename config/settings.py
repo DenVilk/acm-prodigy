@@ -27,8 +27,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("SECRET_KEY")
 
-RECAPTCHA_PUBLIC_KEY = os.getenv("RECAPTCHA_PUBLIC_KEY")
-RECAPTCHA_SECRET_KEY = os.getenv("RECAPTCHA_SECRET_KEY")
+RECAPTCHA_PUBLIC_KEY = str(os.getenv("RECAPTCHA_PUBLIC_KEY"))
+RECAPTCHA_SECRET_KEY = str(os.getenv("RECAPTCHA_SECRET_KEY"))
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
@@ -41,7 +41,7 @@ if DEBUG:
 # Allowed hosts configuration
 
 allowed_hosts = os.getenv("ALLOWED_HOSTS",'localhost').split(',')
-cors_origins = os.getenv("CORS_ORIGINS",'localhost').split(',')
+cors_origins = os.getenv("CORS_ORIGINS",'http://localhost').split(',')
 
 ALLOWED_HOSTS = allowed_hosts
 CSRF_TRUSTED_ORIGINS = cors_origins
