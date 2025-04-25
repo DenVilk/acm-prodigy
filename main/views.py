@@ -1,8 +1,10 @@
+import json
 from django.shortcuts import get_object_or_404, redirect
 from django.views import View
 from django.views.generic import CreateView, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
+from django.http import HttpResponse
 from main.forms import (
     CreateCoachForm,
     CreateParticipantForm,
@@ -455,3 +457,25 @@ class VerifyView(LanguageMixin, LoginRequiredMixin, View):
         request.user.participant.team.save()
 
         return redirect('team-detail')
+
+
+class TeamInfoView(View):
+
+    def get_team(self):
+        id_ = self.kwargs.get("id")
+        return get_object_or_404(Team, id=id_)
+
+    def get(self, request, *args, **kwargs):
+        team = self.get_team()
+
+        data = {
+            "id": team.id,
+            "name": team.name,
+            "location": team.location,
+        }
+
+        return HttpResponse(
+            json.dumps(data),
+            status=200,
+            content_type='application/json; charset=utf-8'
+        )

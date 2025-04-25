@@ -30,11 +30,11 @@
           <button class="button" data-target="#timetable">{{ tr.schedule }}</button>
         </a>
       </li>
-      <!-- <li>
+      <li>
         <a href="{% url 'index' %}#partners">
           <button class="button" data-target="#partners">Партнеры</button>
         </a>
-      </li> -->
+      </li>
     </ul>
     <ul class="extra-buttons">
       {% if request.user.is_authenticated %}
@@ -83,7 +83,7 @@
       <li><a href="{% url 'index' %}#about" class="mobile-menu-button">{{ tr.about }}</a></li>
       <li><a href="{% url 'index' %}#stages" class="mobile-menu-button">{{ tr.stages }}</a></li>
       <li><a href="{% url 'index' %}#timetable" class="mobile-menu-button">{{ tr.schedule }}</a></li>
-      <!-- <li><a href="{% url 'index' %}#partners" class="mobile-menu-button">Партнеры</a></li> -->
+      <li><a href="{% url 'index' %}#partners" class="mobile-menu-button">Партнеры</a></li>
       <li><a href="{% url 'common-info' %}" class="mobile-menu-button">{{ tr.common_info_page_titl }}</a></li>
       <li><a href="{% url 'rules' %}">{{ tr.rules }}</a></li>
     </ul>

@@ -109,6 +109,7 @@ class Team(models.Model):
     system_login = models.CharField(max_length=100, null=True, blank=True)
     system_password = models.CharField(max_length=100, null=True, blank=True)
     is_generated_mail = models.BooleanField(default=False)
+    location = models.CharField(max_length=10, null=True, blank=True)
 
     class Meta:
         verbose_name = 'Команда'

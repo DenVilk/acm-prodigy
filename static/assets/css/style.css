@@ -498,12 +498,30 @@ thead {
 
 .partners-icons {
     display: flex;
-    justify-content: space-between;
-    width: 60%;
+    justify-content: space-around;
+    width: 80%;
+    flex-wrap: wrap;
+    align-items: center;
+    row-gap: 5vmin;
+    column-gap: 5vmin;
 }
 
 .sponsor-logo {
-    width: 10%;
+    width: 15vw;
+    height: fit-content;
+    align-self: center;
+}
+
+#techarena {
+    width: 30%;
+}
+
+#belveb {
+    width: 15%;
+}
+
+#vadarod {
+    width: 28%;
 }
 
 .plane-front {
@@ -866,12 +884,25 @@ a:focus {
 
     .partners-icons {
         flex-wrap: wrap;
-        justify-content: space-between;
-        width: auto;
+        justify-content: space-evenly;
+        width: fit-content;
+        align-items: center;
     }
 
     .sponsor-logo {
-        width: 15%;
+        width: 35vw;
+    }
+
+    #techarena {
+        width: 55vw;
+    }
+
+    #belveb {
+        width: 25%;
+    }
+
+    #vadarod {
+        width: 50%;
     }
 
     .plane-front {
