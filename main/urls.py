@@ -19,6 +19,7 @@ from main.views import (
     UserLoginView,
     SignUpView,
     TeamInfoView,
+    FinalPrintView,
 )
 
 urlpatterns = [
@@ -36,6 +37,7 @@ urlpatterns = [
     path('team/coach/create', CreateCoachView.as_view(), name='create-coach'),
     path('team/coach/change', ChangeCoachView.as_view(), name='change-coach'),
     path('team/verification', VerifyView.as_view(), name='verification'),
+    path('team/printer', FinalPrintView.as_view(), name='printer'),
 
     path('api/team/<int:id>', TeamInfoView.as_view()),
     path('accounts/', LogoutView.as_view(), name='logout'),

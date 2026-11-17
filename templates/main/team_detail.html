@@ -81,6 +81,23 @@
                 </div>
                 <hr class="line" />
                 {% endif %}
+            {% if request.user.participant.team.can_print %}
+                <div class="rowflex_table">
+                    <div class="w30">
+                        <h4 class="table-text">Принтер</h4>
+                    </div>
+                    <div class="w70">
+                        <h4 class="table-text">
+                            <a href="{% url 'printer' %}">
+                                <button class="button">
+                                    Отправить на печать
+                                </button>
+                            </a>
+                        </h4>
+                    </div>
+                </div>
+                <hr class="line" />
+            {% endif %}
             {% if request.user.participant.team.is_ready %}
                 <div class="rowflex_table">
                     <div class="w30">

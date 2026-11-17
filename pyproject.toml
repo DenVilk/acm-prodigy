@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "acm-prodigy"
-version = "1.0.12-rc2"
+version = "1.0.12-rc8"
 description = "Project for management participants on ICPC-like olympiads"
 authors = ["Vladimir Velikovich <vvelikovich@gmail.com>"]
 license = "CC-BY-NC-SA 4.0"
@@ -15,6 +15,7 @@ psycopg2-binary = "^2.9.10"
 requests = "^2.32.3"
 django-recaptcha = "^4.0.0"
 gunicorn = "^23.0.0"
+weasyprint = "^65.1"
 
 
 [build-system]

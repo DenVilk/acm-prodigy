@@ -74,6 +74,7 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'config.urls'
 
 TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
+TEMPLATE_PATH = os.path.join(BASE_DIR, 'templates', 'main', 'printer.html')
 
 TEMPLATES = [
     {

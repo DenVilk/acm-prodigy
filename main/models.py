@@ -110,6 +110,7 @@ class Team(models.Model):
     system_password = models.CharField(max_length=100, null=True, blank=True)
     is_generated_mail = models.BooleanField(default=False)
     location = models.CharField(max_length=10, null=True, blank=True)
+    can_print = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = 'Команда'
@@ -119,10 +120,8 @@ class Team(models.Model):
         login = ''
         if self.status == 'good':
             if self.system_login:
-                if self.is_generated_mail:
-                    login = f'(YaC: {self.system_login})'
-                else:
-                    login = f'(YaC: {self.system_login}, mail didn\'t generated)'
+                if not self.is_generated_mail:
+                    login = f'(mail didn\'t generated)'
             else:
                 login = '(Waiting for login...)'
         return f'{self.name} {login}'

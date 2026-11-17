@@ -1,0 +1,30 @@
+<html>
+<head></head>
+<body>
+    <style>
+        @page{
+            @top-right {
+                content: "team_name";
+            }
+            pre {
+                white-space: pre-wrap;
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+                hyphens: auto;
+            }
+        }
+        @page {
+            size: A4;
+        }
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            hyphens: auto;
+        }
+    </style>
+    <pre>
+        {{text}}
+    </pre>
+</body>
+</html>

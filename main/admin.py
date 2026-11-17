@@ -67,7 +67,8 @@ class TeamAdmin(admin.ModelAdmin):
         '__str__',
         'status',
         'type',
-        'system_login'
+        'system_login',
+        'can_print',
     )
     search_fields = ['name', 'participants__lastname',
                      'coach__lastname', 'system_login']
@@ -78,7 +79,8 @@ class TeamAdmin(admin.ModelAdmin):
         'quaterfinal',
         'semifinal',
         'final',
-        'disqualified'
+        'disqualified',
+        'can_print',
     )
     actions = [
         'mark_as_sent',
@@ -95,7 +97,14 @@ class TeamAdmin(admin.ModelAdmin):
         'reset',
         'generate_users',
         'export_emails',
+        'toggle_print',
     ]
+
+    @admin.action(description="Toggle print")
+    def toggle_print(self, request, queryset):
+        for team in queryset.all():
+            team.can_print = not team.can_print
+            team.save()
 
     @admin.action(description='Export users emails')
     def export_emails(self, request, queryset):

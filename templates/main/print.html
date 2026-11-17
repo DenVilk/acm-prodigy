@@ -1,0 +1,28 @@
+{% extends "wrapper.html" %}
+
+{% block title %}
+Printing
+{% endblock %}
+
+{% block content %}
+<style>
+    textarea.code{
+        border-radius: var(--button-border-radius);
+        width: 70%;
+        height: 50vh;
+        color: black;
+        font-size: 15px;
+        padding: 10px;
+        font-family: monospace;
+    }
+</style>
+<div class="container">
+    <form method="post">
+        {%csrf_token%}
+        <h3 class="title subtitle">Insert your code to print</h1>
+        <textarea name="text" class="code"></textarea>
+        <br>
+        <button type="submit" class="button">{{ tr.send }}</button>
+    </form>
+</div>
+{% endblock %}

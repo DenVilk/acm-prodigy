@@ -1,4 +1,8 @@
+import os
 import json
+import socket
+from pathlib import Path
+from django.conf import settings
 from django.shortcuts import get_object_or_404, redirect
 from django.views import View
 from django.views.generic import CreateView, TemplateView
@@ -10,13 +14,14 @@ from main.forms import (
     CreateParticipantForm,
     CreateTeamForm,
     CreateUserForm,
-    AuthUserForm
+    AuthUserForm,
+    PrinterForm
 )
-from config.settings import RECAPTCHA_PUBLIC_KEY
+from config.settings import BASE_DIR, RECAPTCHA_PUBLIC_KEY
 from main.models import Coach, Participant, Team
 from main.services import get_available_reg, get_credentials_show, get_olympiad_type
 from main.mixins import LanguageMixin
-from main.utils import Configuration
+from main.utils import Configuration, generate_pdf
 
 
 class IndexView(LanguageMixin, TemplateView):
@@ -479,3 +484,57 @@ class TeamInfoView(View):
             status=200,
             content_type='application/json; charset=utf-8'
         )
+
+
+class FinalPrintView(LanguageMixin, View):
+    template_name = 'main/print.html'
+
+    def get(self, request, *args, **kwargs):
+        if not request.user.participant.team:
+            return redirect('index')
+        if not request.user.participant.team.can_print:
+            return redirect('index')
+
+        form = PrinterForm()
+
+        return self.render_page(request, self.template_name, {'form': form})
+
+    def post(self, request, *args, **kwargs):
+        if not request.user.participant.team:
+            return redirect('index')
+        if not request.user.participant.team.can_print:
+            return redirect('index')
+
+        form = PrinterForm(request.POST)
+        team = request.user.participant.team
+
+        if form.is_valid():
+            pdf_path = Path(BASE_DIR, f"printer_{team.id}.pdf")
+            pcl_path = Path(BASE_DIR, f"printer_{team.id}.pcl")
+            generate_pdf(pdf_path, f'{team.name} ({team.location})', form.cleaned_data['text'])
+            gs = ('gs '
+                   '-dNOPAUSE '
+                   '-dBATCH '
+                   '-sDEVICE=ljet4 '
+                   f'-sOutputFile={pcl_path} '
+                   f'{pdf_path}'
+            )
+            import subprocess
+            try:
+                os.system(gs)
+            except subprocess.CalledProcessError as e:
+                raise RuntimeError(f"Ошибка конвертации: {e}")
+
+            with open(Path(settings.BASE_DIR, pcl_path), "rb") as f:
+                file_data = f.read()
+
+            printer_ip = Configuration("configuration.printer.ip")
+            port = int(Configuration('configuration.printer.port'))
+
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                s.connect((printer_ip, port))
+                s.sendall(file_data)
+
+            os.unlink(pdf_path)
+            os.unlink(pcl_path)
+            return redirect('team-detail')

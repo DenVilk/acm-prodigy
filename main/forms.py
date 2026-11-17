@@ -8,6 +8,11 @@ from django.contrib.auth.forms import AuthenticationForm
 from main.utils import Configuration
 from main.services import get_olympiad_type
 
+
+class PrinterForm(forms.Form):
+    text = forms.CharField(widget=forms.Textarea(attrs={"rows":5, "cols":20}))
+
+
 class AuthUserForm(AuthenticationForm, forms.ModelForm):
 
 	class Meta:
